@@ -1,3 +1,4 @@
+import { text } from 'express'
 import {db} from '../database/connection.database.js'
 
 const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usuario})=>{
@@ -11,4 +12,53 @@ const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usu
     }
     const {rows} = await db.query(query)
     return rows[0]
+}
+
+const encontrarPorCorreo = async(correo)=>{
+    const query ={
+        text: `
+        SELECT id_empleado, correo, id_tipo_usuario, estado
+        FROM usuarios WHERE correo = $1
+        `,
+        values: [correo]
+    }
+    const {rows} = await db.query(query);
+    return rows[0]
+}
+
+const listarUsuarios = async () => {
+    const query = {
+        text:`
+        SELECT id_empleado, correo, id_tipo_usuario, estado
+        FROM usuarios
+        `
+    }
+    const {rows} = await db.query(query)
+    return rows
+}
+
+const encontrarPorId = async (id_usuario) => {
+    const query = {
+        text: `
+        SELECT id_empleado, correo, id_tipo_usuario, estado
+        FROM usuarios WHERE id_usuario = $1
+        `,
+        values: [id_usuario]
+    }
+    const {rows} = await db.query(query)
+    return rows[0]
+}
+
+const actualizarTipo = async (id_usuario) => {
+    const query = {
+        text: `
+        UPDATE usuarios
+        set role = 3
+        WHERE id_usuario = $1
+        RETURNING *
+        `,
+        values: [id_usuario]
+    }
+    const {rows} = await db.query(query)
+    return rows [0]
 }

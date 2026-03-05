@@ -62,3 +62,7 @@ const actualizarTipo = async (id_usuario) => {
     const {rows} = await db.query(query)
     return rows [0]
 }
+
+const actualizarUsuario = async(id, updateData)=>{
+    const validFields = ['correo','password_hash', 'id_tipo_usuario', 'estado']
+}

@@ -49,7 +49,7 @@ const encontrarPorId = async (id_usuario) => {
     return rows[0]
 }
 
-const actualizarUsuario = async(id, updateData)=>{
+const actualizarUsuario = async(id_usuario, updateData)=>{
     const validFields = ['correo','password_hash', 'id_tipo_usuario', 'estado'] // campos actualizables
     const fieldsToUpdate ={}
 
@@ -67,5 +67,19 @@ const actualizarUsuario = async(id, updateData)=>{
      .map((key,index) => `${key} = $${index +1}`)
      .join(', ');
 
-     
+     const values = Object.values(fieldsToUpdate)
+     values.push(id_usuario)
+
+     const query ={
+        text:`
+        UPDATE usuarios
+        SET ${setClause}
+        WHERE id_usuario = $${values.length}
+        RETURNIG *
+        `,
+        values: values
+     }
+
+     const {rows} = await db.query(query)
+     return rows[0]
 }

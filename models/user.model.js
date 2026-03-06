@@ -49,20 +49,13 @@ const encontrarPorId = async (id_usuario) => {
     return rows[0]
 }
 
-const actualizarTipo = async (id_usuario) => {
-    const query = {
-        text: `
-        UPDATE usuarios
-        set role = 3
-        WHERE id_usuario = $1
-        RETURNING *
-        `,
-        values: [id_usuario]
-    }
-    const {rows} = await db.query(query)
-    return rows [0]
-}
-
 const actualizarUsuario = async(id, updateData)=>{
-    const validFields = ['correo','password_hash', 'id_tipo_usuario', 'estado']
+    const validFields = ['correo','password_hash', 'id_tipo_usuario', 'estado'] // campos actualizables
+    const fieldsToUpdate ={}
+
+    Object.keys(updateData).forEach(key=>{
+        if(validFields.includes(key) && updateData[key] !== undefined){
+            fieldsToUpdate[key] = updateData[key]
+        }
+    });
 }

@@ -58,4 +58,14 @@ const actualizarUsuario = async(id, updateData)=>{
             fieldsToUpdate[key] = updateData[key]
         }
     });
+
+    if(Object.keys(fieldsToUpdate).length === 0){
+        throw new Error('No se proporcionaron campos para actualizar');
+    }
+
+     const setClause = Object.keys(fieldsToUpdate)
+     .map((key,index) => `${key} = $${index +1}`)
+     .join(', ');
+
+     
 }

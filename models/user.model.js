@@ -83,3 +83,11 @@ const actualizarUsuario = async(id_usuario, updateData)=>{
      const {rows} = await db.query(query)
      return rows[0]
 }
+
+export const userModel={
+    registrarUsuario,
+    encontrarPorCorreo,
+    encontrarPorId,
+    listarUsuarios,
+    actualizarUsuario
+}

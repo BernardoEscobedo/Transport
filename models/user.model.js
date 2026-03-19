@@ -8,7 +8,7 @@ const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usu
             VALUES ($1,$2,$3,$4)
             RETURNING id_empleado, correo, password_hash, id_tipo_usuario
         `,
-        values: [id_empleado, correo, password_hash, tipo_usuario]
+        values: [id_empleado, correo, password_hash, id_tipo_usuario]
     }
     const {rows} = await db.query(query)
     return rows[0]
@@ -17,8 +17,9 @@ const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usu
 const encontrarPorCorreo = async(correo)=>{
     const query ={
         text: `
-        SELECT id_empleado, correo, id_tipo_usuario, estado
-        FROM usuarios WHERE correo = $1
+        SELECT id_usuario, id_empleado, correo, password_hash, id_tipo_usuario, estado
+        FROM usuarios
+        WHERE correo = $1
         `,
         values: [correo]
     }
@@ -75,7 +76,7 @@ const actualizarUsuario = async(id_usuario, updateData)=>{
         UPDATE usuarios
         SET ${setClause}
         WHERE id_usuario = $${values.length}
-        RETURNIG *
+        RETURNING *
         `,
         values: values
      }

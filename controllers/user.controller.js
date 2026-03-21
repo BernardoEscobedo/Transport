@@ -95,3 +95,89 @@ const login = async(req,res)=>{
         })
     }
 }
+
+const perfilUsuario = async(req,res)=>{
+    try {
+        const usuario = await userModel.encontrarPorCorreo(req.correo)
+        return res.json({ok:true, msg: {correo: usuario.correo}})
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg:'Error en el servidor'
+        })
+    }
+}
+
+const listarUsuarios = async(req,res)=>{
+    try {
+        const usuarios = await userModel.listarUsuarios()
+
+        return res.json({ok:true, msg: usuarios})
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg:'Error en el servidor'
+        })
+    }
+}
+
+const actualizarUsuario = async(req,res) => {
+    try {
+        const {id_usurio} = req.params
+        const datoActualizado = req.body
+
+        if(!datoActualizado || Object.keys(datoActualizado).length === 0){
+            return res.status(400).json({
+                ok:false,
+                msg:'No se proporcionaron datos para actualizar'
+            })
+        }
+
+        const usuario = await userModel.encontrarPorId(id_usurio)
+        if(!usuario){
+            return res.status(404).json({
+                ok:false,
+                msg:'Usuario no encontrado'
+            })
+        }
+
+        if(datoActualizado.correo && datoActualizado.correo !== usuario.correo){
+            const usuarioExistente = await userModel.encontrarPorId(datoActualizado.correo)
+            if(usuarioExistente){
+                return res.status(409).json({
+                    ok: false,
+                    msg: 'El correo ya esta en uso por otro usuario'
+                })
+            }
+        }
+
+        if(datoActualizado.password_hash){
+            const salt = await bcrypt.genSalt(10)
+            datoActualizado.password_hash = await bcrypt.hash(datoActualizado.password_hash, salt)
+        }
+
+        const actualizarDato = await userModel.actualizarUsuario(id_usurio, datoActualizado)
+
+        return res.json({
+            ok: true,
+            msg: 'Usuario actualizado correctamente',
+            usuario: actualizarDato
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg:'Error en el servidor'
+        })
+    }
+}
+
+export const usuarioController = {
+    registrarUsuario,
+    login,
+    perfilUsuario,
+    listarUsuarios,
+    actualizarUsuario
+}

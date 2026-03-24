@@ -85,8 +85,11 @@ const loginUsuario = async(req,res)=>{
         return res.json({
             ok:true,
             token,
-            id_tipo_usuario: usuario.id_tipo_usuario,
-            correo: correo.correo
+            usuario:{
+                id_usuario: usuario.id_usuario,
+                correo: usuario.correo,
+                role: usuario.id_tipo_usuario
+            }
         })
     }catch(error){
         console.log(error)
@@ -126,7 +129,7 @@ const listarUsuarios = async(req,res)=>{
 
 const actualizarUsuario = async(req,res) => {
     try {
-        const {id_usurio} = req.params
+        const {id_usuario} = req.params
         const datoActualizado = req.body
 
         if(!datoActualizado || Object.keys(datoActualizado).length === 0){
@@ -136,7 +139,7 @@ const actualizarUsuario = async(req,res) => {
             })
         }
 
-        const usuario = await userModel.encontrarPorId(id_usurio)
+        const usuario = await userModel.encontrarPorId(id_usuario)
         if(!usuario){
             return res.status(404).json({
                 ok:false,
@@ -145,7 +148,7 @@ const actualizarUsuario = async(req,res) => {
         }
 
         if(datoActualizado.correo && datoActualizado.correo !== usuario.correo){
-            const usuarioExistente = await userModel.encontrarPorId(datoActualizado.correo)
+            const usuarioExistente = await userModel.encontrarPorCorreo(datoActualizado.correo)
             if(usuarioExistente){
                 return res.status(409).json({
                     ok: false,

@@ -32,9 +32,29 @@ export const verifyAdminUsuario = (req, res, next) => {
 }
 
 export const verifyOperativo = ( req, res, next ) => {
-    if(req.id_tipo_usuario == 3 ){
+    if(req.id_tipo_usuario == 3 || req.id_tipo_usuario == 1 ){
         return next()
     }
     return res.status(403).json({error:"Autorizado solo para personal operativo"})
 }
 
+export const verifyTransportista =( req, res, next ) => {
+    if(req.id_tipo_usuario == 4 || req.id_tipo_usuario == 1){
+        return next()
+    }
+    return res.status(403).json({error:"Autorizado solo para proveedores de transporte"})
+}
+
+export const verifyCliente =( req, res, next ) => {
+    if(req.id_tipo_usuario == 5 || req.id_tipo_usuario == 1){
+        return next()
+    }
+    return res.status(403).json({error:"Autorizado solo para clientes"})
+}
+
+export const verifyCedisPropio =( req, res, next ) => {
+    if(req.id_tipo_usuario == 6 || req.id_tipo_usuario == 1){
+        return next()
+    }
+    return res.status(403).json({error:"Autorizado solo para cedis propios"})
+}

@@ -1,0 +1,14 @@
+import { Router } from "express";
+import { userController } from "../controllers/user.controller.js"
+import { verifyAdminUsuario, verifyToken } from "../middlewares/jwt.middlewares.js"
+
+const router = Router()
+
+
+router.post('/login', userController.loginUsuario)
+router.get('/profile', verifyToken, userController.perfilUsuario)//ruta protegida
+
+//rutas para admin
+router.get('/usuarios', verifyToken, verifyAdminUsuario, userController.listarUsuarios )
+router.post('/registrarusuario', verifyToken, verifyAdminUsuario, userController.registrarUsuario)
+router.put('/actualizarusuario', verifyToken, verifyAdminUsuario, userController.actualizarUsuario)

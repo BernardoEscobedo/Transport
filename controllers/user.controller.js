@@ -49,7 +49,7 @@ const registrarUsuario = async (req,res) =>{
     }
 }
 
-const login = async(req,res)=>{
+const loginUsuario = async(req,res)=>{
     try{
         const {correo, password_hash} = req.body
 
@@ -176,7 +176,7 @@ const actualizarUsuario = async(req,res) => {
 
 export const usuarioController = {
     registrarUsuario,
-    login,
+    loginUsuario,
     perfilUsuario,
     listarUsuarios,
     actualizarUsuario

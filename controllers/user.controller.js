@@ -49,6 +49,7 @@ const registrarUsuario = async (req,res) =>{
     }
 }
 
+// /api/transport/login
 const loginUsuario = async(req,res)=>{
     try{
         const {correo, password_hash} = req.body

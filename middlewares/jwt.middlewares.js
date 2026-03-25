@@ -15,7 +15,7 @@ export const verifyToken = (req, res, next) => {
     try {
         const {correo, id_tipo_usuario} = jwt.verify(token, process.env.JWT_SECRET)
         console.log(correo)
-        req.email = email
+        req.correo = correo
         req.id_tipo_usuario = id_tipo_usuario
         next()
     } catch (error) {

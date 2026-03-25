@@ -10,5 +10,7 @@ router.get('/profile', verifyToken, userController.perfilUsuario)//ruta protegid
 
 //rutas para admin
 router.get('/usuarios', verifyToken, verifyAdminUsuario, userController.listarUsuarios )
-router.post('/registrarusuario', verifyToken, verifyAdminUsuario, userController.registrarUsuario)
-router.put('/actualizarusuario:id_usuario', verifyToken, verifyAdminUsuario, userController.actualizarUsuario)
+router.post('/registrarusuario', userController.registrarUsuario)
+router.put('/actualizarusuario/:id_usuario', verifyToken, verifyAdminUsuario, userController.actualizarUsuario)
+
+export default router

@@ -1,14 +1,14 @@
-import { text } from 'express'
+//import { text } from 'express'
 import {db} from '../database/connection.database.js'
 
-const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usuario})=>{
+const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usuario, estado})=>{
     const query={
         text:`
-            INSERT INTO usuarios (id_empleado, correo, password_hash, id_tipo_usuario)
-            VALUES ($1,$2,$3,$4)
-            RETURNING id_empleado, correo, password_hash, id_tipo_usuario
+            INSERT INTO usuarios (id_empleado, correo, password_hash, id_tipo_usuario, estado)
+            VALUES ($1,$2,$3,$4,$5)
+            RETURNING id_empleado, correo, password_hash, id_tipo_usuario, estado
         `,
-        values: [id_empleado, correo, password_hash, id_tipo_usuario]
+        values: [id_empleado, correo, password_hash, id_tipo_usuario, estado]
     }
     const {rows} = await db.query(query)
     return rows[0]
@@ -30,7 +30,7 @@ const encontrarPorCorreo = async(correo)=>{
 const listarUsuarios = async () => {
     const query = {
         text:`
-        SELECT id_empleado, correo, id_tipo_usuario, estado
+        SELECT id_usuario, id_empleado, correo, id_tipo_usuario, estado
         FROM usuarios
         `
     }

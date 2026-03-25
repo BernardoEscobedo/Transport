@@ -9,9 +9,6 @@ const db = new Pool({
     database: process.env.PGDATABASE,
     user: process.env.PGUSER,
     password: process.env.PGPASSWORD,
-    ssl: {
-        rejectUnauthorized: false, // IMPORTANTE para Render
-    },
     allowExitOnIdle: true
 });
 

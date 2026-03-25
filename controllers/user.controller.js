@@ -5,13 +5,14 @@ import { request } from 'express'
 
 const registrarUsuario = async (req,res) =>{
     try {
-        const {id_empleado,correo,password_hash, id_tipo_usuario} = req.body
+        const {id_empleado,correo,password_hash, id_tipo_usuario, estado} = req.body
 
         const missingFields=[]
         if(!id_empleado) missingFields.push('id_empleado')
         if(!correo) missingFields.push('correo')
         if(!password_hash) missingFields.push('password_hash')
         if(!id_tipo_usuario) missingFields.push('id_tipo_usuario')
+        if(!estado) missingFields.push('estado')
 
         if(missingFields.length > 0){
             return res.status(400).json({
@@ -26,7 +27,7 @@ const registrarUsuario = async (req,res) =>{
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(password_hash, salt)
 
-            const usuarioNuevo = await userModel.registrarUsuario({id_empleado, correo, password_hash:hashedPassword, id_tipo_usuario})
+            const usuarioNuevo = await userModel.registrarUsuario({id_empleado, correo, password_hash:hashedPassword, id_tipo_usuario, estado})
             const token = jwt.sign({email: usuarioNuevo.correo, role_id: usuarioNuevo.id_tipo_usuario},
             process.env.JWT_SECRET,
             {
@@ -103,7 +104,13 @@ const loginUsuario = async(req,res)=>{
 const perfilUsuario = async(req,res)=>{
     try {
         const usuario = await userModel.encontrarPorCorreo(req.correo)
-        return res.json({ok:true, msg: {correo: usuario.correo}})
+        return res.json({
+            ok:true,
+            usuario:{
+                correo: usuario.correo,
+               id_tipo_usuario: usuario.id_tipo_usuario
+            }
+        })
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -162,7 +169,7 @@ const actualizarUsuario = async(req,res) => {
             datoActualizado.password_hash = await bcrypt.hash(datoActualizado.password_hash, salt)
         }
 
-        const actualizarDato = await userModel.actualizarUsuario(id_usurio, datoActualizado)
+        const actualizarDato = await userModel.actualizarUsuario(id_usuario, datoActualizado)
 
         return res.json({
             ok: true,
@@ -178,7 +185,7 @@ const actualizarUsuario = async(req,res) => {
     }
 }
 
-export const usuarioController = {
+export const userController = {
     registrarUsuario,
     loginUsuario,
     perfilUsuario,

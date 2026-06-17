@@ -76,6 +76,10 @@ const loginUsuario = async(req,res)=>{
             return res.status(401).json({ok: false, msg:"Contraseña incorrecta"})
         }
 
+        if(usuario.estado !== 1){
+            return res.status(403).json({ok: false, msg:"Usuario inactivo, contacta al administrador"})
+        }
+
         const token = jwt.sign({correo: usuario.correo, id_tipo_usuario: usuario.id_tipo_usuario},
             process.env.JWT_SECRET,
             {

@@ -353,3 +353,11 @@ INSERT INTO empleados(nombre, centro_trabajo, puesto, estado) VALUES('Jose Lopez
 INSERT INTO tipo_usuarios(descripcion) VALUES('ADMIN_USER');
 INSERT INTO tipo_usuarios(descripcion) VALUES('DEV_USER');
 INSERT INTO tipo_usuarios(descripcion) VALUES('EMPLEADO_USER');
+
+
+
+
+
+
+
+

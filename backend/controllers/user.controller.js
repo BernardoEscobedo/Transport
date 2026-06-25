@@ -28,7 +28,7 @@ const registrarUsuario = async (req,res) =>{
             const hashedPassword = await bcrypt.hash(password_hash, salt)
 
             const usuarioNuevo = await userModel.registrarUsuario({id_empleado, correo, password_hash:hashedPassword, id_tipo_usuario, estado})
-            const token = jwt.sign({email: usuarioNuevo.correo, role_id: usuarioNuevo.id_tipo_usuario},
+            const token = jwt.sign({id_usuario:usuarioNuevo.id_usuario, email: usuarioNuevo.correo, role_id: usuarioNuevo.id_tipo_usuario},
             process.env.JWT_SECRET,
             {
                 expiresIn:"1h"
@@ -112,7 +112,7 @@ const perfilUsuario = async(req,res)=>{
             ok:true,
             usuario:{
                 correo: usuario.correo,
-               id_tipo_usuario: usuario.id_tipo_usuario
+                id_tipo_usuario: usuario.id_tipo_usuario
             }
         })
     } catch (error) {
@@ -129,6 +129,21 @@ const listarUsuarios = async(req,res)=>{
         const usuarios = await userModel.listarUsuarios()
 
         return res.json({ok:true, msg: usuarios})
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok:false,
+            msg:'Error en el servidor'
+        })
+    }
+}
+
+const encontrarPorId = async(req,res) => {
+    try {
+        const {id_usuario} = req.params
+        const usuario = await userModel.encontrarPorId(id_usuario)
+
+        return res.json({ok: true, msg: usuario})
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -194,5 +209,6 @@ export const userController = {
     loginUsuario,
     perfilUsuario,
     listarUsuarios,
+    encontrarPorId,
     actualizarUsuario
 }

@@ -17,7 +17,13 @@ const registrarUsuario = async ({id_empleado, correo, password_hash, id_tipo_usu
 const encontrarPorCorreo = async(correo)=>{
     const query ={
         text: `
-        SELECT id_usuario, id_empleado, correo, password_hash, id_tipo_usuario, estado
+        SELECT
+        id_usuario,
+        id_empleado,
+        correo,
+        password_hash,
+        id_tipo_usuario,
+        estado
         FROM usuarios
         WHERE correo = $1
         `,
